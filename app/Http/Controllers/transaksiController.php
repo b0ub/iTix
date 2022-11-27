@@ -94,7 +94,25 @@ class transaksiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+        $transaksi = transaksi::where('id', $id)->first();
+        if($transaksi){
+            $transaksi->tanggal_beli = $request->tanggal_beli ? $request->tanggal_beli : $tiket->tanggal_beli;
+            $transaksi->nama = $request->nama ? $request->nama : $tiket->nama;
+            $transaksi->konser = $request->konser ? $request->konser : $tiket->konser;
+            $transaksi->jadwal = $request->jadwal ? $request->jadwal : $tiket->jadwal;
+            $transaksi->jumlah = $request->jumlah ? $request->jumlah : $tiket->jumlah;
+            $transaksi->save();
+            return response()->json([
+                'status' => 200,
+                'message' => "Tiket Berhasil Diubah",
+                'data' => $transaksi
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => "Tiket Tidak Dapat  Ditemukan"
+            ], 404);
+        }
     }
 
     /**
@@ -105,6 +123,18 @@ class transaksiController extends Controller
      */
     public function destroy($id)
     {
-        
+        $transaksi = transaksi::where('id', $id)->first();
+        if($transaksi){
+            $transaksi->delete();
+            return response()->json([
+                'status' => 200,
+                'message' => "Transaksi Dibatalkan"
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => "Transaksi Tidak Dapat Ditemukan"
+            ], 404);
+        }
     }
 }
